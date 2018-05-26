@@ -13,7 +13,6 @@ class Msg(object):
         self._level = level
         self._time = time.time()
         self._function = inspect.stack()[2].function
-        print('FUNC {}'.format(self._function))
 
     def __repr__(self) -> str:
         return '<OnionLogger.Msg(time={}, level={}, function={}) at {:x}>' \
@@ -26,7 +25,6 @@ class Logger(object):
         self._messages = []
 
     def log(self, msg, level=logging.INFO):
-
         message = Msg(msg, level=level)
         self._messages.append(message)
 
@@ -39,6 +37,7 @@ class Logger(object):
     def return_func_sort(self):
         return sorted(self._messages, key=lambda x: x._function)
 
+    # Todo: delete test functions
     def test(self):
 
         for i in range(0, 10):
