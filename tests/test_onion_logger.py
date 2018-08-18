@@ -9,12 +9,17 @@ import OnionLogger
 class TestOnionLogger(unittest.TestCase):
 
     def setUp(self):
-        self.instance = OnionLogger.Logger()
+        self.instance = OnionLogger.Logger('TestModuleName')
 
     def test_serializing(self):
         self.instance.log('Quoth the raven, \'Nevermore\'')
+        for i in range(100):
+            self.instance.warn('Testing integer {}'.format(i))
         self.instance.save_to_disk()
         self.instance.reset()
+
+    def nested(self):
+        self.instance.warn('\'Tis the wind and nothing more!')
 
     def test_inspection(self):
         self.nested()
@@ -22,9 +27,6 @@ class TestOnionLogger(unittest.TestCase):
             self.instance._messages[-1]._function,
             'nested')
         self.instance.reset()
-
-    def nested(self):
-        self.instance.warn('\'Tis the wind and nothing more!')
 
     def test_max_limit(self):
         """
