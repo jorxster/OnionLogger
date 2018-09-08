@@ -11,9 +11,16 @@ class TestOnionLogger(unittest.TestCase):
     def setUp(self):
         self.instance = OnionLogger.Logger('TestModuleName')
 
+    def generic_function1(self, message):
+        self.instance.warn(message)
+
+    def generic_function2(self, message):
+        self.instance.warn(message)
+
     def test_serializing(self):
-        self.instance.log('Quoth the raven, \'Nevermore\'')
-        for i in range(100):
+        self.generic_function1('Quoth the raven, \'Nevermore\'')
+        self.generic_function2('Quoth the raven once more, \'Nevermore\'')
+        for i in range(32):
             self.instance.warn('Testing integer {}'.format(i))
         self.instance.save_to_disk()
         self.instance.reset()
@@ -36,14 +43,14 @@ class TestOnionLogger(unittest.TestCase):
         """
         OnionLogger.MAX_LOGS = 3
         for x in range(5):
-            self.instance.log(x, logging.DEBUG)
+            self.instance.log(x)
 
         self.assertEqual(self.instance.len, 3)
         self.instance._messages = []
 
         OnionLogger.MAX_LOGS = 0
         for x in range(5):
-            self.instance.log(x, logging.DEBUG)
+            self.instance.debug(x)
         self.assertEqual(self.instance.len, 5)
         self.instance.reset()
 
@@ -56,8 +63,7 @@ class TestOnionLogger(unittest.TestCase):
         self.instance.max_limit = 0
         OnionLogger.KEEP_UNIQUE_ONLY = True
         for x in range(10):
-            self.instance.log('Ominous bird of yore.',
-                              logging.DEBUG)
+            self.instance.debug('Ominous bird of yore.')
         self.assertEqual(len(self.instance._messages), 1)
         self.assertEqual(self.instance.len, 1)
         self.instance.reset()
